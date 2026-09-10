@@ -2,3 +2,7 @@
 node_modules/
 dist/
 .env
+
+.veracode/output
+results.json
+filtered-results.json

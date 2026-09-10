@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useProducts, useDeleteProduct } from '../../hooks/useProducts'
 import { useCategories } from '../../hooks/useCategories'
+import ProductSearch from '../../components/ProductSearch'
 
 export default function Products() {
   const { data: products, isLoading, isError } = useProducts()
@@ -32,6 +33,8 @@ export default function Products() {
 
   return (
     <div className="space-y-4">
+      <ProductSearch />
+
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-500">{products?.length ?? 0} product(s)</p>
         <Link
