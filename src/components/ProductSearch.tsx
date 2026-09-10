@@ -11,28 +11,16 @@ interface SearchResult {
 
 export default function ProductSearch() {
   const [query, setQuery] = useState('')
-  const [resultsHtml, setResultsHtml] = useState('')
+  const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
 
   async function handleSearch() {
     if (!query.trim()) return
     setLoading(true)
     try {
-      const res = await fetch(`/api/v1/search?q=${query}`)
+      const res = await fetch(`/api/v1/search?q=${encodeURIComponent(query)}`)
       const data: SearchResult[] = await res.json()
-
-      const html = data
-        .map(
-          (p) =>
-            `<div class="result-item">
-              <strong>${p.name}</strong>
-              <span class="sku">${p.sku}</span>
-              <span class="desc">${p.description ?? ''}</span>
-            </div>`
-        )
-        .join('')
-
-      setResultsHtml(html)
+      setResults(data)
     } finally {
       setLoading(false)
     }
@@ -58,11 +46,16 @@ export default function ProductSearch() {
         </button>
       </div>
 
-      {resultsHtml && (
-        <div
-          className="bg-white border border-slate-200 rounded-md p-4 text-sm space-y-1"
-          dangerouslySetInnerHTML={{ __html: resultsHtml }}
-        />
+      {results.length > 0 && (
+        <div className="bg-white border border-slate-200 rounded-md p-4 text-sm space-y-1">
+          {results.map((p) => (
+            <div key={p.id} className="result-item">
+              <strong>{p.name}</strong>
+              <span className="sku">{p.sku}</span>
+              <span className="desc">{p.description ?? ''}</span>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   )
